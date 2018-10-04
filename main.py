@@ -22,6 +22,7 @@ import config
 import server_runner
 from collections import namedtuple
 from user_authentication.user import User
+from dummy import dummy_db
 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 CONFIG_FILES = namedtuple('CONFIG_FILES', ['default', 'test'])('/config.ini', '/dummy/config.ini')
@@ -34,6 +35,7 @@ def main():
     server_runner.run_iva_server(config_file)
     server_runner.run_cve_search_server()
     create_dummy_user_if_no_user_exists()
+    create_dummy_db()
     return 0
 
 
@@ -47,6 +49,11 @@ def create_dummy_user_if_no_user_exists():
     user = User()
     if user.is_user_collection_empty() or is_test_mode():
         user.create_dummy_user()
+
+
+def create_dummy_db():
+    if is_test_mode():
+        dummy_db.create_db()
 
 
 def is_test_mode():
